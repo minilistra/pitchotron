@@ -1,4 +1,3 @@
-# pitchotron
 Twibright Pitchotron, a musical transcription program
 =====================================================
 
@@ -13,6 +12,8 @@ Requirements
 ------------
 * C Compiler
 * mplayer with mencoder capable of encoding into MPEG4 (DivX)
+* Requires the "theora_encoder_example" Theora video encoder program installed and reachable from $PATH!
+  On Ubuntu package name: libtheora-bin
 
 Compiling and installation.
 ---------------------------
@@ -30,5 +31,5 @@ Author, Copyright, Contact
 --------------------------
 Pitchotron is (c) Karel 'Clock' Kulhavy of Twibright Labs. Pitchotron is a free
 software, released under the GNU Public License version 3.0. Send comments
-to clock (at) twibright (dot) com.
+to clock (at) twibright.com .
 
