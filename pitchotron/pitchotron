@@ -1,0 +1,34 @@
+if [ ! -n "$1" ]
+then
+	echo "usage: pitchotron <audio_or_video_file> [option1] [option2]\
+ [...]" >&2
+	echo -e "\nOutputs the filename with .ogg appended.\n" >&2
+	echo -e "Options\n-------\n-o                     Don't remove overtones" >&2
+	echo -e "-a frequency_in_Hz     Change the middle A (def. 400Hz)\
+ frequency\n-l                     Remove overtones after logarithmization\
+ instead of before\n-b relative_bandwidth  Set analysis bandwidth relative to\
+ default. Less than 1 makes it more narrowband, more than 1 more wideband.\n-r\
+ bpm                 Set the rhythm bars display to given BPM" >&2
+ 	echo -e "-d dynamic_range_dB    Set the display dynamic range in\
+ dB. Default 20dB. Higher value shows more lines, lower value less lines.\
+ Must not be negative. Zero means continuous autoranging.\n\n\
+ Requires the \"theora_encoder_example\" Theora video encoder program installed and\
+ reachable from \$PATH! On Ubuntu package name: libtheora-bin\n" \
+ 	>&2
+	exit 1
+fi
+if [ ! -e "$1" ]
+then
+	echo "pitchotron: error: $1 doesn't exist" >&2
+	exit 1
+fi
+tempfile=/tmp/pitchotron_$$.wav
+filename=$1
+mplayer "$filename" -benchmark -vc null -vo null -format s16le \
+ -ao pcm:fast:file="$tempfile" &&
+shift &&
+set -o pipefail &&
+pitchotron-bin -s $@ < "$tempfile" |\
+	pix-y4m 1x400x564x12x0.4545x400x564 \
+	| theora_encoder_example -o "$filename".ogg "$tempfile" - &&
+rm "$tempfile"
